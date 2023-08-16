@@ -75,6 +75,8 @@ class rectangle:
         bottom_right = [self.bottom_right[0] - player_coords[0], self.bottom_right[1] - player_coords[1], self.bottom_right[2] - player_coords[2]]
 
         # now, make each vector of equal depth to make checking easy
+
+
         top_left = [top_left[0]/top_left[2], top_left[1]/top_left[2], 1]
         top_right = [top_right[0]/top_right[2], top_right[1]/top_right[2], 1]
         bottom_left = [bottom_left[0]/bottom_left[2], bottom_left[1]/bottom_left[2], 1]
@@ -193,3 +195,5 @@ class rectangle:
         return distance
     
         
+    def get_color(self):
+        return (self.color[0], self.color[1], self.color[2])

@@ -14,7 +14,7 @@ import rectangle_class as r
 ########################                                                     <===============================================
 # EDIT DIMENSIONS HERE
 aspect_ratio = 16/9
-screen_height = 400
+screen_height = 200
 screen_width = (int(aspect_ratio * screen_height) // 2) * 2 # round up to a integer that's divisible by 2
 distance_from_monitor = 0.9 # in m
 monitor_width = 0.53
@@ -51,12 +51,13 @@ pillar_location = [100, 200, 50]
 player_height = 1.5
 player_horizontal_angle = 0 # in degrees
 player_vertical_angle = 0
-player_location = [1.5, player_height, -30]
+player_location = [2.5, player_height, -60]
 
 # initialize environment
 
-x = r.rectangle([0, 3, 5], [3, 3, 5], [0, 0, 5], [3, 0, 5], [0, 0, 0])
-print(x.in_bounds(player_location, [player_horizontal_angle, player_vertical_angle], [0, 0], distance_from_monitor, pixel_size, middle_point))
+x = r.rectangle([0, 3, 5], [3, 3, 5], [0, 0, 5], [3, 0, 5], white)
+y = r.rectangle([0, 3, 5], [0, 3, 2], [0, 0, 5], [0, 0, 2], red)
+objects = [x, y]
 
 
 ######### NOTES: Make classes for each object, and store a list of all objects to make initialization easier
@@ -75,7 +76,7 @@ down = False
 
 pxarray = pygame.PixelArray(screen)
 while running:
-    #screen.fill(black)
+    screen.fill(black)
     # Check user input
     for event in pygame.event.get():
         # if user exits
@@ -125,27 +126,35 @@ while running:
 
 
     lis = []
+    counter = 0
     for i in range(screen_width):
         for j in range(screen_height):
+            # Iterate through all objects, and grab the one with lowest distance
+            min = "None"
+            for k in range(0, len(objects)):
+                distance = objects[k].in_bounds(player_location, [player_horizontal_angle, player_vertical_angle], (i, j), distance_from_monitor, pixel_size, middle_point)
 
-            
-            distance = x.in_bounds(player_location, [player_horizontal_angle, player_vertical_angle], (i, j), distance_from_monitor, pixel_size, middle_point)
-            
-            if distance > 0:
-                pxarray[i, j] = pygame.Color(255, 255, 255)
+                if min == "None":
+                    if 0 < distance:
+                        pxarray[i, j] = objects[k].get_color()
+                        min = distance
+                        counter += 1
+                elif 0 < distance < min:
+                    pxarray[i, j] = objects[k].get_color()
+                    min = distance
+                    counter += 1
+                
 
                 #lis.append([i, j])
-                #print(lis)
-                
-                
+                #print(lis
             
-                
-    
+ 
     # iterate through pixels
-    
+    print(player_horizontal_angle, player_vertical_angle)
 
     # set fps
     pygame.display.flip()
+
 
 
 
