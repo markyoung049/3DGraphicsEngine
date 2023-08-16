@@ -68,6 +68,7 @@ class rectangle:
         basis_i = [edge_one[0][0] - location[0], edge_one[0][1] - location[1], edge_one[0][2] - location[2]]
         basis_j = [edge_one[1][0] - location[0], edge_one[1][1] - location[1], edge_one[1][2] - location[2]]
         basis_k = normal'''
+
         top_left = [self.top_left[0] - player_coords[0], self.top_left[1] - player_coords[1], self.top_left[2] - player_coords[2]]
         top_right = [self.top_right[0] - player_coords[0], self.top_right[1] - player_coords[1], self.top_right[2] - player_coords[2]]
         bottom_left = [self.bottom_left[0] - player_coords[0], self.bottom_left[1] - player_coords[1], self.bottom_left[2] - player_coords[2]]
@@ -78,16 +79,112 @@ class rectangle:
         top_right = [top_right[0]/top_right[2], top_right[1]/top_right[2], 1]
         bottom_left = [bottom_left[0]/bottom_left[2], bottom_left[1]/bottom_left[2], 1]
         bottom_right = [bottom_right[0]/bottom_right[2], bottom_right[1]/bottom_right[2], 1]
+        #print(bottom_right, bottom_left)
 
         locationt = [location[0]/location[2], location[1]/location[2], 1]
+        #print(locationt)
+        points = [top_left, top_right, bottom_left, bottom_right, locationt]
 
-        points = [top_left, top_right, bottom_left, bottom_right, location]
+        
+        # construct lines [m, b] and check where the point lies
+        # if line is straight up or down, perform the check
+        checks = [-1, -1, -1, -1] # order is: top, bottom, left, right. 1 is above, 0 is below
+        if (top_left[0] == top_right[0]) :
+            if top_left[0] <=  locationt[0]:
+                checks[0] = 0
+            else:
+                checks[0] = 1
+        
+        else:
+            top_slope = (top_left[1]-top_right[1]) / (top_left[0]-top_right[0])
+            top_b =  top_left[1] - (top_slope * top_left[0])
 
-        # create the convex hull, and check if the location is outside
-        convex_hull = []
-        # initialize with thw lowest point
-        #for i in range(len(points)) :
+            f_x = top_slope * locationt[0] + top_b
+            # check if the point is below the line.
+            if f_x >= locationt[1]:
+                checks[0] = 0
+            else:
+                checks[0] = 1
 
+        # bottom
+        if (bottom_left[0] == bottom_right[0]) :
+            if bottom_left[0] <=  locationt[0]:
+                checks[1] = 0
+            else:
+                checks[1] = 1
+
+        else:
+            bottom_slope = (bottom_left[1]-bottom_right[1]) / (bottom_left[0]-bottom_right[0])
+            bottom_b =  bottom_left[1] - (bottom_slope * bottom_left[0])
+
+            f_x = bottom_slope * locationt[0] + bottom_b
+            # check if the point is below the line.
+            if f_x >= locationt[1]:
+                checks[1] = 0
+            else:
+                checks[1] = 1
+
+        # left
+        if (top_left[0] == bottom_left[0]) :
+            if bottom_left[0] <=  locationt[0]:
+                checks[2] = 0
+            else:
+                checks[2] = 1
+
+        else:
+            left_slope = (top_left[1]-bottom_left[1]) / (top_left[0]-bottom_left[0])
+            left_b =  top_left[1] - (left_slope * top_left[0])
+
+            f_x = left_slope * locationt[0] + left_b
+            # check if the point is below the line.
+            if f_x >= locationt[1]:
+                checks[2] = 0
+            else:
+                checks[2] = 1
+
+
+        # right
+        if (top_right[0] == bottom_right[0]) :
+            if bottom_right[0] <=  locationt[0]:
+                checks[3] = 0
+            else:
+                checks[3] = 1
+
+        else:
+            right_slope = (top_right[1]-bottom_right[1]) / (top_right[0]-bottom_right[0])
+            right_b =  top_right[1] - (right_slope * top_right[0])
+
+            f_x = right_slope * locationt[0] + right_b
+            # check if the point is below the line.
+            if f_x >= locationt[1]:
+                checks[3] = 0
+            else:
+                checks[3] = 1
+
+        # now, make sure that the point is in the shape, bt checking that its in between top and bottom, and left and right\
+        #print(checks)
+        if checks[0] == checks[1]:
+            return -1
+        if checks[2] == checks[3]:
+            return -1
+        
+        '''
+
+        # compute convex hull
+        
+        # first, find lowest point
+        min = points[i][1]
+        min_index = 0
+        for i in range(len(points)):
+            val = points[i][1]
+            
+            if min > val:
+                min = val
+                min_index = i
+
+        # now that minimum has been obtained, compute convex hull
+        hull = []
+        '''
 
         # if the object is there, and is not behind, find and return its euclidean distance
         distance = math.sqrt(     location[0]*location[0]     +     (location[1])*(location[1])     +    
