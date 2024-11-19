@@ -1,9 +1,11 @@
 ############################################
 # 3D GRAPHICS TEST
 ############################################
+
 import pygame
 import math
 import rectangle_class as r
+
 #######################################################################################################################################
 # Initialization
 #######################################################################################################################################
@@ -14,7 +16,7 @@ import rectangle_class as r
 ########################                                                     <===============================================
 # EDIT DIMENSIONS HERE
 aspect_ratio = 16/9
-screen_height = 200
+screen_height = 150
 screen_width = (int(aspect_ratio * screen_height) // 2) * 2 # round up to a integer that's divisible by 2
 distance_from_monitor = 0.9 # in m
 monitor_width = 0.53
@@ -51,13 +53,14 @@ pillar_location = [100, 200, 50]
 player_height = 1.5
 player_horizontal_angle = 0 # in degrees
 player_vertical_angle = 0
-player_location = [2.5, player_height, -60]
+player_location = [1.5, player_height, -60]
 
 # initialize environment
 
 x = r.rectangle([0, 3, 5], [3, 3, 5], [0, 0, 5], [3, 0, 5], white)
-y = r.rectangle([0, 3, 5], [0, 3, 2], [0, 0, 5], [0, 0, 2], red)
-objects = [x, y]
+y = r.rectangle([0, 3, 5], [0, 3, -3], [0, 0, 5], [0, 0, -3], red)
+z = r.rectangle([3, 3, 5], [3, 3, -3], [3, 0, 5], [3, 0, -3], [0, 0, 255])
+objects = [x, y, z]
 
 
 ######### NOTES: Make classes for each object, and store a list of all objects to make initialization easier
@@ -86,10 +89,10 @@ while running:
         # if user holds q, turn left;. if e, turn right, etc.
         elif event.type == pygame.KEYDOWN:
 
-            if event.key == pygame.K_q:
+            if event.key == pygame.K_a:
                 left = True
 
-            if event.key == pygame.K_e:
+            if event.key == pygame.K_d:
                 right = True
 
             if event.key == pygame.K_w:
@@ -115,18 +118,16 @@ while running:
 
     # adjust layer angle for turn
     if left:
-        player_horizontal_angle = (player_horizontal_angle - 2) % 360
+        player_location[0]= player_location[0] - 1
     if right:
-        player_horizontal_angle = (player_horizontal_angle + 2) % 360
+        player_location[0]= player_location[0] + 1
     if down:
-        player_vertical_angle = (player_vertical_angle - 2) % 360
+        player_location[2]= player_location[2] - 1
     if up:
-        player_vertical_angle = (player_vertical_angle + 2) % 360
+        player_location[2]= player_location[2] + 1
 
 
 
-    lis = []
-    counter = 0
     for i in range(screen_width):
         for j in range(screen_height):
             # Iterate through all objects, and grab the one with lowest distance
@@ -138,19 +139,14 @@ while running:
                     if 0 < distance:
                         pxarray[i, j] = objects[k].get_color()
                         min = distance
-                        counter += 1
                 elif 0 < distance < min:
                     pxarray[i, j] = objects[k].get_color()
                     min = distance
-                    counter += 1
                 
 
-                #lis.append([i, j])
-                #print(lis
             
  
     # iterate through pixels
-    print(player_horizontal_angle, player_vertical_angle)
 
     # set fps
     pygame.display.flip()

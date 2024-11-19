@@ -1,0 +1,5 @@
+Instead of pierating through every pixel, I first need to iterate through a smaller set of pxels using the fact that I have edges and veretices. 
+So, the initial boot may take a while, but, eveery frame, only a small amout of mobvement can occur. So, the best way to optimizer performance is to only change what has 
+changed, like how I optimized the snake AI.\
+
+Basically, if you look at the previous state of the objects from the previous frame, you can easily see 

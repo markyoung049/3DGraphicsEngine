@@ -1,4 +1,28 @@
 import math
+
+
+
+
+
+
+"""
+NOTE: THIS MODULE HAS BEEN DEPRECATED. As such, all code is commented out.
+"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+
 class rectangle:
 
     def __init__(self, top_left_coords, top_right_coords, bottom_left_coords, bottom_right_coords, color):
@@ -12,9 +36,10 @@ class rectangle:
     def in_bounds(self, player_coords, player_angle, pixel, distance_from_monitor, pixel_size, middle_point):
 
         # initialize
-        pixel_t = [pixel[0] - middle_point[0], middle_point[1] - pixel[1]] # transform pygame coords so that (0, 0) is in the middle, and y is increasiong as it goes up
+        pixel_t = [pixel[0] - middle_point[0], middle_point[1] - pixel[1]] # transform pygame coords so that (0, 0) is in the middle, and y is increasing as it goes up
         x_dimension = pixel_t[0] * pixel_size
         y_dimension = pixel_t[1] * pixel_size
+        z_dimension = distance_from_monitor
         pixel_angle = [math.atan(x_dimension / distance_from_monitor), math.atan(y_dimension / distance_from_monitor)]
 
         # first, check if the distance where the angle intersects the plane is positive
@@ -36,7 +61,7 @@ class rectangle:
 
         # find where t in vector f(t) = (Lt, Mt, Nt) intersects the plane by substituting Lt = x, Mt = y, Nt = z
         # First, compute AL + BM + CN
-        vector = [x_dimension, y_dimension, distance_from_monitor]
+        vector = [x_dimension, y_dimension, z_dimension]
         denominator =  (vector[0]*normal[0]) + (vector[1]*normal[1]) + (vector[2]*normal[2])
 
         # check if the line is parallel to the plane. If it is, then return -1. Since the line is restricted to hgaving a point through (0, 0), if d is zero, and if denominator is zero, then any t would work
@@ -81,10 +106,8 @@ class rectangle:
         top_right = [top_right[0]/top_right[2], top_right[1]/top_right[2], 1]
         bottom_left = [bottom_left[0]/bottom_left[2], bottom_left[1]/bottom_left[2], 1]
         bottom_right = [bottom_right[0]/bottom_right[2], bottom_right[1]/bottom_right[2], 1]
-        #print(bottom_right, bottom_left)
 
         locationt = [location[0]/location[2], location[1]/location[2], 1]
-        #print(locationt)
         points = [top_left, top_right, bottom_left, bottom_right, locationt]
 
         
@@ -164,7 +187,6 @@ class rectangle:
                 checks[3] = 1
 
         # now, make sure that the point is in the shape, bt checking that its in between top and bottom, and left and right\
-        #print(checks)
         if checks[0] == checks[1]:
             return -1
         if checks[2] == checks[3]:
@@ -197,3 +219,4 @@ class rectangle:
         
     def get_color(self):
         return (self.color[0], self.color[1], self.color[2])
+        """
