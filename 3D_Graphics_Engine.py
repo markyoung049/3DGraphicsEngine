@@ -5,6 +5,7 @@
 import pygame
 import math
 import rectangle_class as r
+import entity
 
 #######################################################################################################################################
 # Initialization
@@ -16,13 +17,15 @@ import rectangle_class as r
 ########################                                                     <===============================================
 # EDIT DIMENSIONS HERE
 aspect_ratio = 16/9
-screen_height = 150
+screen_height = 100
 screen_width = (int(aspect_ratio * screen_height) // 2) * 2 # round up to a integer that's divisible by 2
 distance_from_monitor = 0.9 # in m
 monitor_width = 0.53
 monitor_height = .3
 pixel_size = 0.00027604166
 middle_point = [int(screen_width / 2), int(screen_height / 2)]
+renderDistance = [.1, 1000]
+fov = .785
 
 # NOTES: ADD SUPPORT FOR CURVED MONITOR
 
@@ -37,6 +40,7 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode([screen_width, screen_height])
 white = [255, 255, 255]
 red = [255, 0, 0]
+redPxarray = (255, 0, 0)
 black = [0, 0, 0]
 screen.fill(black)
 running = True
@@ -53,14 +57,14 @@ pillar_location = [100, 200, 50]
 player_height = 1.5
 player_horizontal_angle = 0 # in degrees
 player_vertical_angle = 0
-player_location = [1.5, player_height, -60]
+player_location = [0, 1, -5]
 
 # initialize environment
-
-x = r.rectangle([0, 3, 5], [3, 3, 5], [0, 0, 5], [3, 0, 5], white)
-y = r.rectangle([0, 3, 5], [0, 3, -3], [0, 0, 5], [0, 0, -3], red)
-z = r.rectangle([3, 3, 5], [3, 3, -3], [3, 0, 5], [3, 0, -3], [0, 0, 255])
-objects = [x, y, z]
+xTriangles = [entity.triangle((0, 0, 0), (5, 0, 0), (0, 5, 0), redPxarray, (0, 0, 5)), entity.triangle((0, 0, 0), (0, 5, 0), (5, 0, 0), redPxarray, (0, 0, 5))]
+x = entity.entity(xTriangles)
+#y = r.rectangle([0, 3, 5], [0, 3, -3], [0, 0, 5], [0, 0, -3], red)
+#z = r.rectangle([3, 3, 5], [3, 3, -3], [3, 0, 5], [3, 0, -3], [0, 0, 255])
+entities = [x]
 
 
 ######### NOTES: Make classes for each object, and store a list of all objects to make initialization easier
@@ -76,13 +80,21 @@ left = False
 right = False
 up = False
 down = False
+clockwise = False
+counterClockwise = False
 
 pxarray = pygame.PixelArray(screen)
+
+player = entity.player(player_location, [player_horizontal_angle, player_vertical_angle])
+
+render = True
 while running:
+
     screen.fill(black)
     # Check user input
     for event in pygame.event.get():
         # if user exits
+
         if event.type == pygame.QUIT:
             running = False
 
@@ -101,12 +113,18 @@ while running:
             if event.key == pygame.K_s:
                 down = True
 
-        elif event.type == pygame.KEYUP:
-
             if event.key == pygame.K_q:
-                left = False
+                counterClockwise = True
 
             if event.key == pygame.K_e:
+                clockwise = True
+
+        elif event.type == pygame.KEYUP:
+
+            if event.key == pygame.K_a:
+                left = False
+
+            if event.key == pygame.K_d:
                 right = False
 
             if event.key == pygame.K_w:
@@ -115,18 +133,29 @@ while running:
             if event.key == pygame.K_s:
                 down = False
 
+            if event.key == pygame.K_q:
+                counterClockwise = False
+
+            if event.key == pygame.K_e:
+                clockwise = False
+
+
 
     # adjust layer angle for turn
     if left:
-        player_location[0]= player_location[0] - 1
+        player_location[0]= player_location[0] - .1
     if right:
-        player_location[0]= player_location[0] + 1
+        player_location[0]= player_location[0] + .1
     if down:
-        player_location[2]= player_location[2] - 1
+        player_location[2]= player_location[2] - .1
     if up:
-        player_location[2]= player_location[2] + 1
+        player_location[2]= player_location[2] + .1
+    if counterClockwise:
+        player.setAngle([player.getAngle()[0] + 0.261799, player.getAngle()[1]])
+    if clockwise:
+        player.setAngle([player.getAngle()[0] - 0.261799, player.getAngle()[1]])
 
-
+    """
 
     for i in range(screen_width):
         for j in range(screen_height):
@@ -149,9 +178,12 @@ while running:
     # iterate through pixels
 
     # set fps
-    pygame.display.flip()
+    screen.flip()
+    """
 
+    if render: 
+        entity.render(entities, player, fov, aspect_ratio, renderDistance, screen, (screen_width, screen_height))
 
-
+    clock.tick(144)
 
 # NOTES: CONVEX HULL
