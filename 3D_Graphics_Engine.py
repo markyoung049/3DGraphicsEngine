@@ -17,7 +17,7 @@ import entity
 ########################                                                     <===============================================
 # EDIT DIMENSIONS HERE
 aspect_ratio = 16/9
-screen_height = 100
+screen_height = 108
 screen_width = (int(aspect_ratio * screen_height) // 2) * 2 # round up to a integer that's divisible by 2
 distance_from_monitor = 0.9 # in m
 monitor_width = 0.53
@@ -39,6 +39,7 @@ pygame.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode([screen_width, screen_height])
 white = [255, 255, 255]
+
 red = [255, 0, 0]
 redPxarray = (255, 0, 0)
 black = [0, 0, 0]
@@ -53,14 +54,15 @@ pillar_width = 10
 pillar_length = 20
 pillar_location = [100, 200, 50]
 
-# player defaults
+# player defaultss
 player_height = 1.5
 player_horizontal_angle = 0 # in degrees
 player_vertical_angle = 0
-player_location = [0, 1, -5]
+player_location = [0, 0, -5]
 
 # initialize environment
-xTriangles = [entity.triangle((0, 0, 0), (5, 0, 0), (0, 5, 0), redPxarray, (0, 0, 5)), entity.triangle((0, 0, 0), (0, 5, 0), (5, 0, 0), redPxarray, (0, 0, 5))]
+xTriangles = [ entity.triangle((0, 0, 0), (0, 5, 0), (5, 0, 0), redPxarray, (0, 0, 5))]
+# entity.triangle((0, 0, 0), (5, 0, 0), (0, 5, 0), redPxarray, (0, 0, 5)),
 x = entity.entity(xTriangles)
 #y = r.rectangle([0, 3, 5], [0, 3, -3], [0, 0, 5], [0, 0, -3], red)
 #z = r.rectangle([3, 3, 5], [3, 3, -3], [3, 0, 5], [3, 0, -3], [0, 0, 255])
@@ -143,13 +145,13 @@ while running:
 
     # adjust layer angle for turn
     if left:
-        player_location[0]= player_location[0] - .1
+        player_location[0]= player_location[0] - 1
     if right:
-        player_location[0]= player_location[0] + .1
+        player_location[0]= player_location[0] + 1
     if down:
-        player_location[2]= player_location[2] - .1
+        player_location[2]= player_location[2] - 1
     if up:
-        player_location[2]= player_location[2] + .1
+        player_location[2]= player_location[2] + 1
     if counterClockwise:
         player.setAngle([player.getAngle()[0] + 0.0261799, player.getAngle()[1]])
     if clockwise:
@@ -184,6 +186,6 @@ while running:
     if render: 
         entity.render(entities, player, fov, aspect_ratio, renderDistance, screen, (screen_width, screen_height))
 
-    clock.tick(144)
+    clock.tick(1)
 
 # NOTES: CONVEX HULL

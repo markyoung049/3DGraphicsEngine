@@ -111,7 +111,7 @@ class triangle:
         xPositions.sort()
         yPositions.sort()
   
-        self.boundingBox = [xPositions[0], xPositions[1], yPositions[0], yPositions[1]]
+        self.boundingBox = [xPositions[0], xPositions[2], yPositions[0], yPositions[2]]
         
         # Compute the area of the triangle using determinant
         self.area = abs(0.5 * (  self.screenA[0] * (self.screenB[1] - self.screenC[1]) 
@@ -182,7 +182,6 @@ class entity:
 
                 boundingBox = triangle.getBoundingBox()
                 minX, maxX, minY, maxY = math.floor(boundingBox[0]), math.ceil(boundingBox[1]), math.floor(boundingBox[2]), math.ceil(boundingBox[3])
-
                 # make sure the bounding box is in thw window and if not then clip it
                 if minX <= 0:
                     minX = 0
@@ -193,10 +192,10 @@ class entity:
                     minY = 0
                 if maxY >= screenHeight:
                     maxY = screenHeight-1
+
                 # for every pixel in the bounding box, check where they land in the triangle
                 for x in range(minX, maxX):
                     for y in range(minY, maxY):
-
                         p  = (x, y)
 
                         # Now do edge functions: Baically its a cross product between the vector of side AB and AP, BC and BP, CA anc CP. if all cross products have same sign
@@ -219,12 +218,16 @@ class entity:
                             gamma = eAB / area   
                             
                             z = alpha * a[2] + beta * b[2] + gamma * c[2]
+                            
 
 
                             # if the depth is minimum so far update
                             if 0 <= z <= pixArray[x][y]:
                                 pixArray[x][y] = z
-                                pxArray[x, y] = triangle.getColor()
+                                # Since pygame flips y you need to transform it
+                                yPrime = -y + screenHeight-1
+                                
+                                pxArray[x, yPrime] = triangle.getColor()
                         # If the point is not in the triangle
                         else:
                             pass
@@ -339,7 +342,7 @@ def toPlayerView(point, player, fov, aspectRatio, renderDistance, screenSize):
 
         verticalRotationMatrix = np.array([     [1, 0, 0],
                                                 [0, math.cos(vertAngle), -math.sin(vertAngle)],
-                                                [0, math.sin(horizAngle), math.cos(horizAngle)]   ])
+                                                [0, math.sin(vertAngle), math.cos(vertAngle)]   ])
         
         horizontalRotationMatrix = np.array([   [math.cos(horizAngle), 0, math.sin(horizAngle)],
                                                 [0, 1, 0],
@@ -347,7 +350,7 @@ def toPlayerView(point, player, fov, aspectRatio, renderDistance, screenSize):
         
         # Perform the rotations but apply the horizontal one first. prepare for perspective matrix
         rotatedPoint = np.dot(verticalRotationMatrix, np.dot(horizontalRotationMatrix, pointPlayerPosition))
-        w = 1
+
 
         # Now, apply the projection matrix to the rotated values
         near = renderDistance[0]
@@ -355,24 +358,25 @@ def toPlayerView(point, player, fov, aspectRatio, renderDistance, screenSize):
 
         projectionMatrix = np.array([   [1/(aspectRatio * math.tan(fov/2)), 0, 0, 0],
                                         [0, 1/(math.tan(fov/2)), 0, 0],
-                                        [0, 0, (-near+far)/(near-far), (-2*near*far)/(near-far)],
-                                        [0, 0, -1, 0]   ])
+                                        [0, 0, (near+far)/(far-near), (2*near*far)/(far-near)],
+                                        [0, 0, 1, 0]   ])
         
         ndcPoint = np.dot(projectionMatrix, np.array([rotatedPoint[0], rotatedPoint[1], rotatedPoint[2], 1]))
-
         w = ndcPoint[3]
+        
 
-        ndcPoint = ndcPoint / w
- 
+        if w != 0:
+            ndcPoint = ndcPoint / w
+        else:
+            print('Value Error')
         # Apply the viewpoint matrix to but the coords in terms of screen coordinates
         width = screenSize[0]
         height = screenSize[1]
         viewpointMatrix = np.array( [[width/2, 0, 0, width/2 ],
                                     [0, height/2, 0, height/2 ], 
-                                    [0, 0, 1/2, 1/2],
+                                    [0, 0, 1, -1],
                                     [0, 0, 0, 1]] )
 
         # Get screen coordinates
         coords = np.dot(viewpointMatrix, ndcPoint)
-
         return coords
