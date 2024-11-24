@@ -151,9 +151,9 @@ while running:
     if up:
         player_location[2]= player_location[2] + .1
     if counterClockwise:
-        player.setAngle([player.getAngle()[0] + 0.261799, player.getAngle()[1]])
+        player.setAngle([player.getAngle()[0] + 0.0261799, player.getAngle()[1]])
     if clockwise:
-        player.setAngle([player.getAngle()[0] - 0.261799, player.getAngle()[1]])
+        player.setAngle([player.getAngle()[0] - 0.0261799, player.getAngle()[1]])
 
     """
 

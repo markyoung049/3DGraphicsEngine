@@ -337,13 +337,13 @@ def toPlayerView(point, player, fov, aspectRatio, renderDistance, screenSize):
 
         # This section will apply 2 rotations to the map and rotate them to the player view
 
-        horizontalRotationMatrix = np.array([   [math.cos(horizAngle), -math.sin(horizAngle), 0],
-                                                [math.sin(horizAngle), math.cos(horizAngle), 0],
-                                                [0, 0, 1]   ])
+        verticalRotationMatrix = np.array([     [1, 0, 0],
+                                                [0, math.cos(vertAngle), -math.sin(vertAngle)],
+                                                [0, math.sin(horizAngle), math.cos(horizAngle)]   ])
         
-        verticalRotationMatrix = np.array([     [math.cos(vertAngle), 0, math.sin(vertAngle)],
-                                                [0, 1, -0],
-                                                [-math.sin(vertAngle), 0, math.cos(vertAngle)]   ])
+        horizontalRotationMatrix = np.array([   [math.cos(horizAngle), 0, math.sin(horizAngle)],
+                                                [0, 1, 0],
+                                                [-math.sin(horizAngle), 0, math.cos(horizAngle)]   ])
         
         # Perform the rotations but apply the horizontal one first. prepare for perspective matrix
         rotatedPoint = np.dot(verticalRotationMatrix, np.dot(horizontalRotationMatrix, pointPlayerPosition))
