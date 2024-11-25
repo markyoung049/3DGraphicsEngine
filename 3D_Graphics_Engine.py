@@ -6,6 +6,7 @@ import pygame
 import math
 import rectangle_class as r
 import entity
+import numpy as np
 
 #######################################################################################################################################
 # Initialization
@@ -91,7 +92,8 @@ player = entity.player(player_location, [player_horizontal_angle, player_vertica
 
 render = True
 while running:
-
+    horizAngle = player.getAngle()[0]
+    playerPosition = player.getPosition()
     screen.fill(black)
     # Check user input
     for event in pygame.event.get():
@@ -144,19 +146,36 @@ while running:
 
 
     # adjust layer angle for turn
+
+    # Rotate space, apply movements, then rotate back
     #print( -.1 * (math.cos(player.getAngle()[0])))
+    horizontalRotationMatrix = np.array([   [math.cos(horizAngle), 0, math.sin(horizAngle)],
+                                                [0, 1, 0],
+                                                [-math.sin(horizAngle), 0, math.cos(horizAngle)]   ])
+
+    playerPosVector = np.array(playerPosition)
+    rotatedPosVector = np.dot(horizontalRotationMatrix, playerPosVector)
+    rotatedPos = [rotatedPosVector[0], rotatedPosVector[1], rotatedPosVector[2]]
+
+
+    # In the roptated space, apply the motion
     if left:
-        player_location[0]= player_location[0] - .1 * (math.cos(player.getAngle()[0]))
-        player_location[2]= player_location[2] + .1 * (math.sin(player.getAngle()[0]))  
+        rotatedPos[0] = rotatedPosVector[0] - .1 
     if right:
-        player_location[0]= player_location[0] + .1 * (math.cos(player.getAngle()[0]))
-        player_location[2]= player_location[2] - .1 * (math.sin(player.getAngle()[0])) 
+        rotatedPos[0] = rotatedPosVector[0] + .1  
     if down:
-        player_location[0]= player_location[0] - .1 * (math.sin(player.getAngle()[0]))
-        player_location[2]= player_location[2] - .1 * (math.cos(player.getAngle()[0])) 
+        rotatedPos[2] = rotatedPosVector[2] - .1 
     if up:
-        player_location[0]= player_location[0] + .1 * (math.sin(player.getAngle()[0]))
-        player_location[2]= player_location[2] + .1 * (math.cos(player.getAngle()[0])) 
+        rotatedPos[2]= rotatedPosVector[2] + .1  
+
+    # Rotate the vector back to global space
+    rotatedPos = np.array(rotatedPos)
+    position = np.dot(horizontalRotationMatrix.T, rotatedPos)
+    player.setPosition(position)
+
+
+
+
     if counterClockwise:
         player.setAngle([player.getAngle()[0] + 0.0261799, player.getAngle()[1]])
     if clockwise:
