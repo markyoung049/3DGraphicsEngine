@@ -177,12 +177,15 @@ class entity:
             a = triangle.getScreenA()
             b = triangle.getScreenB()
             c = triangle.getScreenC()
-            
+
+
             # Make sure the triangle isnt out of render distance
-            if (0 <= a[2] <= 1) and (0 <= b[2] <= 1) and (0 <= c[2] <= 1):
+            if (0 <= a[2] <= 1) or (0 <= b[2] <= 1) or (0 <= c[2] <= 1):
 
                 boundingBox = triangle.getBoundingBox()
                 minX, maxX, minY, maxY = math.floor(boundingBox[0]), math.ceil(boundingBox[1]), math.floor(boundingBox[2]), math.ceil(boundingBox[3])
+
+
                 # make sure the bounding box is in thw window and if not then clip it
                 if minX <= 0:
                     minX = 0
@@ -193,6 +196,7 @@ class entity:
                     minY = 0
                 if maxY >= screenHeight:
                     maxY = screenHeight-1
+
 
                 # for every pixel in the bounding box, check where they land in the triangle
                 for x in range(minX, maxX):
@@ -218,7 +222,7 @@ class entity:
                             beta = eCA / area
                             gamma = eAB / area   
                             
-                            z = abs(alpha * a[2] + beta * b[2] + gamma * c[2])
+                            z = alpha * a[2] + beta * b[2] + gamma * c[2]
 
 
                             # if the depth is minimum so far update
