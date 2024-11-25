@@ -58,10 +58,10 @@ pillar_location = [100, 200, 50]
 player_height = 1.5
 player_horizontal_angle = 0 # in degrees
 player_vertical_angle = 0
-player_location = [0, 0, -5]
+player_location = [0, 1, -5]
 
 # initialize environment
-xTriangles = [ entity.triangle((0, 0, 0), (0, 5, 0), (5, 0, 0), redPxarray, (0, 0, 5))]
+xTriangles = [ entity.triangle((0, 0, 0), (0, 5, 0), (5, 5, 0), redPxarray, (0, 0, 5)), entity.triangle((0, 0, 0), (5, 0, 0), (5, 5, 0), redPxarray, (0, 0, 5))]
 # entity.triangle((0, 0, 0), (5, 0, 0), (0, 5, 0), redPxarray, (0, 0, 5)),
 x = entity.entity(xTriangles)
 #y = r.rectangle([0, 3, 5], [0, 3, -3], [0, 0, 5], [0, 0, -3], red)
@@ -144,14 +144,19 @@ while running:
 
 
     # adjust layer angle for turn
+    #print( -.1 * (math.cos(player.getAngle()[0])))
     if left:
-        player_location[0]= player_location[0] - 1
+        player_location[0]= player_location[0] - .1 * (math.cos(player.getAngle()[0]))
+        player_location[2]= player_location[2] + .1 * (math.sin(player.getAngle()[0]))  
     if right:
-        player_location[0]= player_location[0] + 1
+        player_location[0]= player_location[0] + .1 * (math.cos(player.getAngle()[0]))
+        player_location[2]= player_location[2] - .1 * (math.sin(player.getAngle()[0])) 
     if down:
-        player_location[2]= player_location[2] - 1
+        player_location[0]= player_location[0] - .1 * (math.sin(player.getAngle()[0]))
+        player_location[2]= player_location[2] - .1 * (math.cos(player.getAngle()[0])) 
     if up:
-        player_location[2]= player_location[2] + 1
+        player_location[0]= player_location[0] + .1 * (math.sin(player.getAngle()[0]))
+        player_location[2]= player_location[2] + .1 * (math.cos(player.getAngle()[0])) 
     if counterClockwise:
         player.setAngle([player.getAngle()[0] + 0.0261799, player.getAngle()[1]])
     if clockwise:
@@ -186,6 +191,6 @@ while running:
     if render: 
         entity.render(entities, player, fov, aspect_ratio, renderDistance, screen, (screen_width, screen_height))
 
-    clock.tick(1)
+    clock.tick(144)
 
 # NOTES: CONVEX HULL

@@ -177,6 +177,7 @@ class entity:
             a = triangle.getScreenA()
             b = triangle.getScreenB()
             c = triangle.getScreenC()
+            
             # Make sure the triangle isnt out of render distance
             if (0 <= a[2] <= 1) and (0 <= b[2] <= 1) and (0 <= c[2] <= 1):
 
@@ -206,8 +207,8 @@ class entity:
                         eCA = (p[0] - c[0]) * (a[1] - c[1]) - ((p[1] - c[1]) * (a[0] - c[0]))
 
                         # If they have the same sign then the point is in the triangle
-                        if (eAB>= 0 and eBC>=0 and eCA>=0) or ((eAB<= 0 and eBC<=0 and eCA<=0)):
-
+                        if (eAB>= 0 and eBC>=0 and eCA>=0) or (eAB<= 0 and eBC<=0 and eCA<=0):
+                            
 
                             # Compute the depth using barycentric coordinates
                             area = triangle.getArea()
@@ -217,8 +218,7 @@ class entity:
                             beta = eCA / area
                             gamma = eAB / area   
                             
-                            z = alpha * a[2] + beta * b[2] + gamma * c[2]
-                            
+                            z = abs(alpha * a[2] + beta * b[2] + gamma * c[2])
 
 
                             # if the depth is minimum so far update
@@ -226,7 +226,6 @@ class entity:
                                 pixArray[x][y] = z
                                 # Since pygame flips y you need to transform it
                                 yPrime = -y + screenHeight-1
-                                
                                 pxArray[x, yPrime] = triangle.getColor()
                         # If the point is not in the triangle
                         else:
@@ -328,8 +327,8 @@ def toPlayerView(point, player, fov, aspectRatio, renderDistance, screenSize):
         
         playerAngle = player.getAngle()
         playerPosition = player.getPosition()
-        horizAngle = -playerAngle[0]  # angle is negative because rotating in the opposite direction as the player
-        vertAngle = -playerAngle[1]   # angle is negative because rotating in the opposite direction as the player
+        horizAngle = playerAngle[0]  # angle is negative because rotating in the opposite direction as the player
+        vertAngle = playerAngle[1]   # angle is negative because rotating in the opposite direction as the player
         x = point[0]
         y = point[1]
         z = point[2]
@@ -350,7 +349,6 @@ def toPlayerView(point, player, fov, aspectRatio, renderDistance, screenSize):
         
         # Perform the rotations but apply the horizontal one first. prepare for perspective matrix
         rotatedPoint = np.dot(verticalRotationMatrix, np.dot(horizontalRotationMatrix, pointPlayerPosition))
-
 
         # Now, apply the projection matrix to the rotated values
         near = renderDistance[0]
