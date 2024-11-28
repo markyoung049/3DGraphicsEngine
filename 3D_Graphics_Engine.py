@@ -195,31 +195,6 @@ while running:
     if clockwise:
         player.setAngle([player.getAngle()[0] - 0.0261799, player.getAngle()[1]])
 
-    """
-
-    for i in range(screen_width):
-        for j in range(screen_height):
-            # Iterate through all objects, and grab the one with lowest distance
-            min = "None"
-            for k in range(0, len(objects)):
-                distance = objects[k].in_bounds(player_location, [player_horizontal_angle, player_vertical_angle], (i, j), distance_from_monitor, pixel_size, middle_point)
-
-                if min == "None":
-                    if 0 < distance:
-                        pxarray[i, j] = objects[k].get_color()
-                        min = distance
-                elif 0 < distance < min:
-                    pxarray[i, j] = objects[k].get_color()
-                    min = distance
-                
-
-            
- 
-    # iterate through pixels
-
-    # set fps
-    screen.flip()d
-    """
     # Render the scene
     screen.lock()
     entity.render(scene, player, fov, aspect_ratio, renderDistance, screen, (screen_width, screen_height))

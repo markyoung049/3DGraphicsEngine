@@ -30,71 +30,6 @@ class triangle:
     # Transform the coordinates to the player view
     def update2DView(self, player, fov, aspectRatio, renderDistance, screenSize):
         
-        """
-        playerAngle = player.getAngle()
-        playerPosition = player.getPosition()
-        horizAngle = -playerAngle[0]  # angle is negative because rotating in the opposite direction as the player
-        vertAngle = -playerAngle[1]   # angle is negative because rotating in the opposite direction as the player
-
-        # Grab object coordinates relative to the player (before rotation)
-        playerA = np.array(self.globalA[0] - playerPosition[0], self.globalA[1] - playerPosition[1], self.globalA[2] - playerPosition[2])
-        playerB = np.array(self.globalB[0] - playerPosition[0], self.globalB[1] - playerPosition[1], self.globalB[2] - playerPosition[2])
-        playerC = np.array(self.globalC[0] - playerPosition[0], self.globalC[1] - playerPosition[1], self.globalC[2] - playerPosition[2])
-
-        # This section will apply 2 rotations to the map and rotate them to the player view
-
-        horizontalRotationMatrix = np.array([   [math.cos(horizAngle), -math.sin(horizAngle), 0],
-                                                [math.sin(horizAngle), math.cos(vertAngle), 0],
-                                                [0, 0, 1]   ])
-        
-        verticalRotationMatrix = np.array([     [1, 0, 0],
-                                                [0, math.cos(vertAngle), -math.sin(vertAngle)],
-                                                [0, math.sin(vertAngle), math.cos(vertAngle)]   ])
-        
-        # Perform the rotations but apply the horizontal one first. prepare for perspective mtrix
-        rotatedA = verticalRotationMatrix * (horizontalRotationMatrix * playerA)
-        rotatedB = verticalRotationMatrix * (horizontalRotationMatrix * playerB)
-        rotatedC = verticalRotationMatrix * (horizontalRotationMatrix * playerC)
-
-        
-        w = 1
-
-        # Now, apply the projection matrix to the rotated values
-        near = renderDistance[0]
-        far = renderDistance[1]
-
-        projectionMatrix = np.array([   [1/(aspectRatio * math.tan(fov/2)), 0, 0, 0],
-                                        [0, 1/(math.tan(fov/2)), 0, 0],
-                                        [0, 0, (near+far)/(near-far), (2*near*far)/(near-far)],
-                                        [0, 0, -1, 0]   ])
-
-
-        aPrime = projectionMatrix * np.array(rotatedA[0], rotatedA[1], rotatedA[2], 1)
-        bPrime = projectionMatrix * np.array(rotatedB[0], rotatedB[1], rotatedB[2], 1) 
-        cPrime = projectionMatrix * np.array(rotatedC[0], rotatedC[1], rotatedC[2], 1)
-
-        
-        # Now, calculate the distance to each point using a^2 + b^2 + c^2 = d^2
-        distanceA = math.sqrt(rotatedA[0]*rotatedA[0] + rotatedA[1]*rotatedA[1] + rotatedA[2]*rotatedA[2])
-        distanceB = math.sqrt(rotatedB[0]*rotatedB[0] + rotatedB[1]*rotatedB[1] + rotatedB[2]*rotatedB[2])
-        distanceC = math.sqrt(rotatedC[0]*rotatedC[0] + rotatedC[1]*rotatedC[1] + rotatedC[2]*rotatedC[2])
-        
-
-        # Save the depth
-        self.depthA = rotatedA[2]
-        self.depthB = rotatedB[2]
-        self.depthC = rotatedC[2]
-
-
-
-        # Now, compute the 2d position of a b and c 
-        self.positionA = (math.tan(angleA[0]), (math.tan(angleA[1])))
-        self.positionB = (math.tan(angleB[0]), (math.tan(angleB[1])))
-        self.positionC = (math.tan(angleC[0]), (math.tan(angleC[1])))
-
-
-        """
-
         self.screenA = toPlayerView (self.a, player, fov, aspectRatio, renderDistance, screenSize)
         self.screenB = toPlayerView (self.b, player, fov, aspectRatio, renderDistance, screenSize)
         self.screenC = toPlayerView (self.c, player, fov, aspectRatio, renderDistance, screenSize)
@@ -276,12 +211,6 @@ class player:
     def getAngle(self):
         return self.angle
     
-    """
-    # Get player height
-    def getHeight(self):
-        return self.height
-
-    """
 
     # Set player position
     def setPosition(self, position):
@@ -291,13 +220,6 @@ class player:
     def setAngle(self, angle):
         self.angle = angle
     
-    """
-    # Set player height
-    def setHeight(self, height):
-        self.height = height
-
-    """
-
 
 
 ##########################################################################################################################################################################
@@ -311,15 +233,6 @@ def render(entities, player, fov, aspectRatio, renderDistance, screen, screenSiz
     # Initialize an empty pixelarray with -1
     pixArray = {}
     
-    """
-    for i in range(screenSize[0]):
-        pixList = []
-
-        for j in range(screenSize[1]):
-            pixList.append(renderDistance[1] + 1)
-        
-        pixArray.append(pixList)
-        """
     # iterate through all objects and compute the depth of each pixel
     for entity in entities:
 
@@ -331,7 +244,7 @@ def render(entities, player, fov, aspectRatio, renderDistance, screen, screenSiz
         
     
 
-    pygame.display.flip() # update the screen
+    
 
 
 
