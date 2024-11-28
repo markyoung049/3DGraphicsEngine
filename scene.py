@@ -26,7 +26,7 @@ frames = 0
 
 
 ########################                                                     <===============================================
-# EDIT DIMENSIONS HERE
+# EDIT HERE
 aspect_ratio = 16/9
 screen_height = 100
 screen_width = (int(aspect_ratio * screen_height) // 2) * 2 # round up to a integer that's divisible by 2
@@ -38,13 +38,8 @@ middle_point = [int(screen_width / 2), int(screen_height / 2)]
 renderDistance = [.1, 1000]
 fov = .785
 
-# NOTES: ADD SUPPORT FOR CURVED MONITOR
-
-########################                                                     <===============================================          
-
- 
-
-
+       
+########################                                                     <===============================================   
 # pygame
 pygame.init()
 clock = pygame.time.Clock()
@@ -58,15 +53,9 @@ red = (255, 0, 0)
 black = [0, 0, 0]
 screen.fill(black)
 running = True
-
-# Create room (in meters)
-width = 100
-height = 50
-length = 200
-pillar_width = 10
-pillar_length = 20
-pillar_location = [100, 200, 50]
-
+#########################
+########################                                                     <===============================================
+# EDIT HERE
 # player defaults
 player_height = 1.5
 player_horizontal_angle = 0 # in degrees
@@ -83,9 +72,7 @@ y = entity.entity(yTriangles)
 scene = [x, y]
 
 
-######### NOTES: Make classes for each object, and store a list of all objects to make initialization easier
-
-
+########################                                                     <===============================================
 
 
 
