@@ -221,15 +221,22 @@ class entity:
                             area = triangle.getArea()
 
                             # Use barycentric coordinates to compute the depth
-                            alpha = eBC / area
-                            beta = eCA / area
-                            gamma = eAB / area   
+                            alpha = eBC
+                            beta = eCA
+                            gamma = eAB   
                             
-                            z = alpha * a[2] + beta * b[2] + gamma * c[2]
+                            z = (alpha * a[2] + beta * b[2] + gamma * c[2]) / area
 
-                            # if the depth is minimum so far update
-                            if 0 <= z <= pixArray[x][y]:
-                                pixArray[x][y] = z
+                            # if the depth is minimum so far update 
+                            # If this is the first
+                            if (x, y) not in pixArray:
+                                pixArray[(x, y)] = z
+                                # Since pygame flips y you need to transform it
+                                yPrime = -y + screenHeight-1
+                                pxArray[x, yPrime] = triangle.getColor()
+                            
+                            elif 0 <= z <= pixArray[(x, y)]:
+                                pixArray[(x, y)] = z
                                 # Since pygame flips y you need to transform it
                                 yPrime = -y + screenHeight-1
                                 pxArray[x, yPrime] = triangle.getColor()
@@ -302,8 +309,9 @@ def render(entities, player, fov, aspectRatio, renderDistance, screen, screenSiz
 
     pxArray = pygame.PixelArray(screen)
     # Initialize an empty pixelarray with -1
-    pixArray = []
+    pixArray = {}
     
+    """
     for i in range(screenSize[0]):
         pixList = []
 
@@ -311,7 +319,7 @@ def render(entities, player, fov, aspectRatio, renderDistance, screen, screenSiz
             pixList.append(renderDistance[1] + 1)
         
         pixArray.append(pixList)
-
+        """
     # iterate through all objects and compute the depth of each pixel
     for entity in entities:
 

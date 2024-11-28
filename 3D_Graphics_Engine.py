@@ -8,19 +8,29 @@ import rectangle_class as r
 import entity
 import numpy as np
 
+import time
+
+
+
+# Code to be timed
+
+
+
 #######################################################################################################################################
 # Initialization
 #######################################################################################################################################
 
-
+# Teack average fps
+start_time = time.time()
+frames = 0
 
 
 ########################                                                     <===============================================
 # EDIT DIMENSIONS HERE
 aspect_ratio = 16/9
-screen_height = 108
+screen_height = 250
 screen_width = (int(aspect_ratio * screen_height) // 2) * 2 # round up to a integer that's divisible by 2
-distance_from_monitor = 0.9 # in m
+distance_from_monitor = 0.9 # in mw
 monitor_width = 0.53
 monitor_height = .3
 pixel_size = 0.00027604166
@@ -205,12 +215,17 @@ while running:
     # iterate through pixels
 
     # set fps
-    screen.flip()
+    screen.flip()d
     """
 
     if render: 
         entity.render(scene, player, fov, aspect_ratio, renderDistance, screen, (screen_width, screen_height))
 
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    fps = frames / elapsed_time
+    print(f"FPS:", fps)
+    frames += 1
     clock.tick(144)
 
 # NOTES: CONVEX HULL
