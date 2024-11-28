@@ -21,14 +21,14 @@ import time
 #######################################################################################################################################
 
 # Teack average fps
-start_time = time.time()
+startTime = time.time()
 frames = 0
 
 
 ########################                                                     <===============================================
 # EDIT DIMENSIONS HERE
 aspect_ratio = 16/9
-screen_height = 250
+screen_height = 100
 screen_width = (int(aspect_ratio * screen_height) // 2) * 2 # round up to a integer that's divisible by 2
 distance_from_monitor = 0.9 # in mw
 monitor_width = 0.53
@@ -50,6 +50,8 @@ pygame.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode([screen_width, screen_height])
 white = [255, 255, 255]
+pygame.display.set_caption("3D Simulation")
+font = pygame.font.Font(None, 20)
 
 blue = (0, 0, 255)
 red = (255, 0, 0)
@@ -97,12 +99,13 @@ down = False
 clockwise = False
 counterClockwise = False
 
-pxarray = pygame.PixelArray(screen)
+fps = 0
 
 player = entity.player(player_location, [player_horizontal_angle, player_vertical_angle])
 
 render = True
 while running:
+    pxarray = pygame.PixelArray(screen)
     horizAngle = player.getAngle()[0]
     playerPosition = player.getPosition()
     screen.fill(black)
@@ -217,15 +220,33 @@ while running:
     # set fps
     screen.flip()d
     """
+    # Render the scene
+    screen.lock()
+    entity.render(scene, player, fov, aspect_ratio, renderDistance, screen, (screen_width, screen_height))
+    del pxarray
+    screen.unlock()
 
-    if render: 
-        entity.render(scene, player, fov, aspect_ratio, renderDistance, screen, (screen_width, screen_height))
+    
+     # FPS TEST
+    if frames == 5:
+        # Calcuate the fps
+        
+        elapsedTime = time.time() - startTime
+        fps = 5 / elapsedTime
 
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    fps = frames / elapsed_time
-    print(f"FPS:", fps)
+        frames = 0
+        startTime = time.time()
+
+    # Draw the fps counter
+    text = font.render(f"{fps:.2f} FPS", True, (0, 255, 0))
+    textBox = text.get_rect(center=(35, 20))
+
+    screen.blit(text, textBox)
+
     frames += 1
     clock.tick(144)
+
+
+    pygame.display.flip() # update the screen
 
 # NOTES: CONVEX HULL
