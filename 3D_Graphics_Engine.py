@@ -59,7 +59,7 @@ pillar_location = [100, 200, 50]
 player_height = 1.5
 player_horizontal_angle = 0 # in degrees
 player_vertical_angle = 0
-player_location = [5, 1, -10]
+player_location = [-3, 1, -15]
 
 # initialize environment
 xTriangles = [ entity.triangle((0, 0, 0), (0, 5, 0), (10, 5, 0), red, (0, 0, 5)), entity.triangle((0, 0, 0), (10, 0, 0), (10, 5, 0), red, (0, 0, 5))]

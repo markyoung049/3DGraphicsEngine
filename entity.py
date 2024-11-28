@@ -180,7 +180,7 @@ class entity:
 
 
             # Make sure the triangle isnt out of render distance
-            if (0 <= a[2] <= 1) or (0 <= b[2] <= 1) or (0 <= c[2] <= 1):
+            if (0 <= a[2]) or (0 <= b[2]) or (0 <= c[2]):
 
                 boundingBox = triangle.getBoundingBox()
                 minX, maxX, minY, maxY = math.floor(boundingBox[0]), math.ceil(boundingBox[1]), math.floor(boundingBox[2]), math.ceil(boundingBox[3])
@@ -233,8 +233,6 @@ class entity:
                                 # Since pygame flips y you need to transform it
                                 yPrime = -y + screenHeight-1
                                 pxArray[x, yPrime] = triangle.getColor()
-
-                                
                         # If the point is not in the triangle
                         else:
                             pass
@@ -365,7 +363,7 @@ def toPlayerView(point, player, fov, aspectRatio, renderDistance, screenSize):
 
         projectionMatrix = np.array([   [1/(aspectRatio * math.tan(fov/2)), 0, 0, 0],
                                         [0, 1/(math.tan(fov/2)), 0, 0],
-                                        [0, 0, (near+far)/(far-near), (2*near*far)/(far-near)],
+                                        [0, 0, (near+far)/(far-near), -(2*near*far)/(far-near)],
                                         [0, 0, 1, 0]   ])
         
         ndcPoint = np.dot(projectionMatrix, np.array([rotatedPoint[0], rotatedPoint[1], rotatedPoint[2], 1]))
@@ -373,7 +371,7 @@ def toPlayerView(point, player, fov, aspectRatio, renderDistance, screenSize):
         
 
         if w != 0:
-            ndcPoint = ndcPoint / abs(w) # Absolute value si ot preserves the direction 
+            ndcPoint = ndcPoint / abs(w) # Absolute value so the point is not flipped when behind the player
         else:
             print('Value Error')
         # Apply the viewpoint matrix to but the coords in terms of screen coordinates
@@ -381,7 +379,7 @@ def toPlayerView(point, player, fov, aspectRatio, renderDistance, screenSize):
         height = screenSize[1]
         viewpointMatrix = np.array( [[width/2, 0, 0, width/2 ],
                                     [0, height/2, 0, height/2 ], 
-                                    [0, 0, 1, -1],
+                                    [0, 0, 1/2, 1/2],
                                     [0, 0, 0, 1]] )
 
         # Get screen coordinates
