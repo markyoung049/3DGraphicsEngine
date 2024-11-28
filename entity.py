@@ -213,6 +213,9 @@ class entity:
                         # If they have the same sign then the point is in the triangle
                         if (eAB>= 0 and eBC>=0 and eCA>=0) or (eAB<= 0 and eBC<=0 and eCA<=0):
                             
+                            eAB = abs(eAB)
+                            eBC = abs(eBC)
+                            eCA = abs(eCA)
 
                             # Compute the depth using barycentric coordinates
                             area = triangle.getArea()
@@ -224,16 +227,18 @@ class entity:
                             
                             z = alpha * a[2] + beta * b[2] + gamma * c[2]
 
-
                             # if the depth is minimum so far update
                             if 0 <= z <= pixArray[x][y]:
                                 pixArray[x][y] = z
                                 # Since pygame flips y you need to transform it
                                 yPrime = -y + screenHeight-1
                                 pxArray[x, yPrime] = triangle.getColor()
+
+                                
                         # If the point is not in the triangle
                         else:
                             pass
+
         return pixArray, pxArray
 
 
@@ -368,7 +373,7 @@ def toPlayerView(point, player, fov, aspectRatio, renderDistance, screenSize):
         
 
         if w != 0:
-            ndcPoint = ndcPoint / w
+            ndcPoint = ndcPoint / abs(w) # Absolute value si ot preserves the direction 
         else:
             print('Value Error')
         # Apply the viewpoint matrix to but the coords in terms of screen coordinates

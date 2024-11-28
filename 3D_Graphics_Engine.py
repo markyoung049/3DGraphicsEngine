@@ -55,7 +55,7 @@ pillar_width = 10
 pillar_length = 20
 pillar_location = [100, 200, 50]
 
-# player defaultss
+# player defaults
 player_height = 1.5
 player_horizontal_angle = 0 # in degrees
 player_vertical_angle = 0
