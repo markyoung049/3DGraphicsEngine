@@ -7,12 +7,9 @@ import math
 import rectangle_class as r
 import entity
 import numpy as np
-
 import time
 
 
-
-# Code to be timed
 
 
 
@@ -41,6 +38,7 @@ fov = .785
        
 ########################                                                     <===============================================   
 # pygame
+
 pygame.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode([screen_width, screen_height])
@@ -53,9 +51,11 @@ red = (255, 0, 0)
 black = [0, 0, 0]
 screen.fill(black)
 running = True
+
 #########################
 ########################                                                     <===============================================
 # EDIT HERE
+
 # player defaults
 player_height = 1.5
 player_horizontal_angle = 0 # in degrees
@@ -76,6 +76,13 @@ scene = [x, y]
 
 
 
+
+
+
+
+
+
+
 #######################################################################################################################################
 # Main Game Loop
 #######################################################################################################################################
@@ -85,17 +92,19 @@ up = False
 down = False
 clockwise = False
 counterClockwise = False
-
 fps = 0
-
 player = entity.player(player_location, [player_horizontal_angle, player_vertical_angle])
-
 render = True
+
+
+
 while running:
+
     pxarray = pygame.PixelArray(screen)
     horizAngle = player.getAngle()[0]
     playerPosition = player.getPosition()
     screen.fill(black)
+
     # Check user input
     for event in pygame.event.get():
         # if user exits
@@ -147,7 +156,6 @@ while running:
 
 
     # adjust layer angle for turn
-
     # Rotate space, apply movements, then rotate back
     #print( -.1 * (math.cos(player.getAngle()[0])))
     horizontalRotationMatrix = np.array([   [math.cos(horizAngle), 0, math.sin(horizAngle)],
